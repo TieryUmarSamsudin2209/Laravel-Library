@@ -39,7 +39,7 @@
                 }
             @endphp
             <h3 class="text-center">Welcome, {{ Auth::user()->name }} <small class="text-muted">({{ ucfirst($roleName) }})</small></h3>
-            <p>Welcome back — browse our collection and borrow the books you like.</p>
+            <p>Welcome back — browse our collection and manage library data as needed.</p>
         @else
             <h3 class="text-center">Welcome To Our Library Website</h3>
             <p>Please take a look, if there is a book you are interested in, you can borrow it.</p>

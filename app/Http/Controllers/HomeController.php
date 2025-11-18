@@ -1,4 +1,7 @@
-<?php
+<?php 
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 
 namespace App\Http\Controllers;
 
@@ -10,4 +13,13 @@ class HomeController extends Controller
     {
         return view('home.index');
     }
+    
+    public function adminDashboard()
+    {
+        return view('admin.index');
+    }
 }
+?>
+
+
+

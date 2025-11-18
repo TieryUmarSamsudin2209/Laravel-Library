@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Category;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -13,7 +13,15 @@ class CategoryController extends Controller
     public function index()
     {
         $datas = Category::all();
-        return view('categories.index', compact('datas'));
+        $isAdmin = (Auth::check() && Auth::user()->hasRole('admin'));
+        $isMember = (Auth::check() && Auth::user()->hasRole('member'));
+
+        // If logged in as member, redirect to named access denied route
+        if (Auth::check() && Auth::user()->hasRole('member')) {
+            return redirect()->route('access.denied');
+        }
+
+        return view('categories.index', compact('datas', 'isAdmin', 'isMember'));
     }
 
     /**
@@ -21,6 +29,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/category')->with('error', 'Only admin can add category!');
+        }
         $request->validate([
             'category_name' => 'required|unique:categories,category_name'
         ],[
@@ -47,6 +58,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/category')->with('error', 'Only admin can update category!');
+        }
         $request->validate([
             'category_name' => 'required|unique:categories,category_name'
         ],[
@@ -66,6 +80,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/category')->with('error', 'Only admin can delete category!');
+        }
         $data = Category::find($id);
         $data->delete();
         return redirect("/admin/category")->with("success", "category has been deleted!");

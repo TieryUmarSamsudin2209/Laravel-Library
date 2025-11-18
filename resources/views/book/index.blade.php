@@ -1,7 +1,10 @@
 @include("template.header")
 
-        <div class="container shadow mt-4 p-4">
-            <h1>Book List</h1>
+        <div class="container shadow mt-4 p-4 bg-light rounded">
+            <div class="top-title d-flex justify-content-between align-items-center">
+                <h1>Book List</h1>
+                <a href="/" class="btn btn-danger"><i class="fa-solid fa-xmark"></i></a>
+            </div>
             @if (session("success"))
                 <div class="alert alert-success">
                     {{ session("success") }}
@@ -16,6 +19,7 @@
                     </ul>
                 </div>
             @endif
+            @if($isAdmin)
             <form method="POST">
                 @csrf
                 <div class="row">
@@ -64,9 +68,10 @@
                     </div>
                 </div>
             </form>
+            @endif
 
             <div class="my-5">
-                <table class="table">
+                <table class="table text-center">
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -88,13 +93,17 @@
                                 <td>{{  $book->qty }} </td>
                                 <td>{{  $book->year }} </td>
                                 <td>
-                                    <a href="/admin/book/{{  $book->id }}">Update</a>
-                                    <form method="POST" action="/admin/book/{{  $book->id }}">
-                                        @method('DELETE')
-                                         @csrf
-                                    <button type="submit">
-                                        Delete</submit>
-                                    </form>
+                                    @if($isAdmin)
+                                    <div class="button_action d-flex gap-2 justify-content-center">
+                                        <a href="/admin/book/{{  $book->id }}" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <form method="POST" action="/admin/book/{{  $book->id }}">
+                                            @method('DELETE')
+                                             @csrf
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                    </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

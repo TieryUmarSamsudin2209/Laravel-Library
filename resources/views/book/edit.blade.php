@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@include('template.header')
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <link  href="{{ asset('/style/bootstrap.min.css') }}" rel="stylesheet" />
-        
-    </head>
-    <body>
-        <div class="container shadow mt-4 p-4">
-            <h1>Update Book!</h1>
+        <div class="container shadow mt-4 p-4 bg-light rounded">
+            <div class="title_top d-flex justify-content-between align-items-center d-flex">
+                <h1>Update Book</h1>
+                <a href="/admin/book" class="btn btn-danger"><i class="fa-solid fa-xmark"></i></a>
+            </div>
             @if (session("success"))
                 <div class="alert alert-success">
                     {{ session("success") }}
@@ -82,5 +75,5 @@
                 </div>
             </form>
         </div>
-    </body>
-</html>
+
+@include('template.footer')

@@ -18,7 +18,8 @@ class BorrowController extends Controller
         $users = User::whereHas('role', function($query){
             $query->where('role_name', "=", "member");
         })->get();
-        return view("borrow.index", compact('users','books'));
+        $borrow = Borrow::with(['book', 'user'])->get();
+        return view("borrow.index", compact('users','books','borrows'));
     }
 
     /**
@@ -27,8 +28,8 @@ class BorrowController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'book_id'=> 'required|exists:book,id',
-            'user_id'=> 'required|unique:user,id',
+            'book_id'=> 'required|exists:books,id',
+            'user_id'=> 'required|exists:users,id',
             'qty'=> 'required|digits_between:1,2',
             'start_borrow'=> 'required|date',
             'end_borrow'=> 'required|date',
@@ -48,24 +49,47 @@ class BorrowController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $borrow = Borrow::with(['book', 'user'])->findOrFail($id);
+        $books = Book::all();
+        $users = User::whereHas('role', function($query){
+            $query->where('role_name', "=", "member");
+        })->get();
+        return view('borrow.edit', compact('borrow', 'books', 'users'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'book_id'=> 'required|exists:books,id',
+            'user_id'=> 'required|exists:users,id',
+            'qty'=> 'required|digits_between:1,2',
+            'start_borrow'=> 'required|date',
+            'end_borrow'=> 'required|date',
+        ]);
+
+        $borrow = Borrow::findOrFail($id);
+        $borrow->book_id = $request->book_id;
+        $borrow->user_id = $request->user_id;
+        $borrow->qty = $request->qty;
+        $borrow->start_borrow = $request->start_borrow;
+        $borrow->end_borrow = $request->end_borrow;
+        $borrow->save();
+
+        return redirect('/admin/borrow')->with('success', 'Borrow data has been updated!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $borrow = Borrow::findOrFail($id);
+        $borrow->delete();
+        return redirect('/admin/borrow')->with('success', 'Borrow data has been deleted!');
     }
 }

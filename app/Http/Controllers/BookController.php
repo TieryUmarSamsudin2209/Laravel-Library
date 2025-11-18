@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Book;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -27,12 +27,15 @@ class BookController extends Controller
         )
         ->get();
 
-
-        return view('book.index', compact('categories', 'books'));
+        $isAdmin = (Auth::check() && Auth::user()->hasRole('admin'));
+        return view('book.index', compact('categories', 'books', 'isAdmin'));
     }
 
     public function store(Request $request)
     {
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/book')->with('error', 'Only admin can add books!');
+        }
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|unique:books,title',
@@ -50,7 +53,6 @@ class BookController extends Controller
         ]);
 
         return redirect("/admin/book")->with("success", "book has been added!");
-
     }
 
     /**
@@ -68,6 +70,9 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/book')->with('error', 'Only admin can update books!');
+        }
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|unique:books,title',
@@ -92,8 +97,11 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-         $book = Book::findOrFail($id);
-         $book->delete();
+        if (!(Auth::check() && Auth::user()->hasRole('admin'))) {
+            return redirect('/admin/book')->with('error', 'Only admin can delete books!');
+        }
+        $book = Book::findOrFail($id);
+        $book->delete();
         return redirect("/admin/book")->with("success", "book has been deleted!");
     }
 }
