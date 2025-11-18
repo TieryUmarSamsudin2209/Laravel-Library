@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('book_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->integer('qty');
+            $table->date('start_borrow');
+            $table->date('end_borrow');
+            $table->date('return_borrow')->nullable();
+            $table->double('fine', 0.0);
             $table->timestamps();
         });
     }
