@@ -103,6 +103,8 @@
                                             <i class="fa-solid fa-trash-can"></i></button>
                                         </form>
                                     </div>
+                                    @else
+                                    <p class="text-danger"><i>Admin Only</i></p>
                                     @endif
                                 </td>
                             </tr>

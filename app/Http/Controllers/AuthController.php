@@ -34,10 +34,9 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'member', // default member
+            'role' => 'member',
         ]);
 
-        // After register, redirect to login with success message
         return redirect('/login')->with('successRegister', 'Akun berhasil terdaftar, silakan login!');
     }
 
@@ -53,7 +52,6 @@ class AuthController extends Controller
         }
         if(Hash::check($request->password,$user->password)){
             Auth::login($user);
-            // If admin, redirect to admin dashboard
             if(method_exists($user, 'hasRole') && $user->hasRole('admin')){
                 return redirect('/admin')->with("successLogin", "Login Success!");
             }

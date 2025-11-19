@@ -1,19 +1,19 @@
 @include('template.header')
 
 <nav>
-    <div class="nav-body d-flex justify-content-between p-3 align-items-center">
-        <div class="title text-light">
+    <div class="nav-body d-flex justify-content-between p-3 align-items-center bg-light">
+        <div class="title">
             <h1>LIBRARY</h1>
         </div>
         <div class="menu">
                 @if(Auth::check())
-                    <a href="/" class="text-decoration-none mx-1 text-light">Home</a>
-                    <a href="/admin/book" class="text-decoration-none mx-1 text-light">Book</a>
-                    <a href="/admin/borrow" class="text-decoration-none mx-1 text-light">Borrow Book</a>
-                    <a href="/admin/category" class="text-decoration-none mx-1 text-light">Category Book</a>
+                    <a href="/" class="text-decoration-none mx-1">Home</a>
+                    <a href="/admin/book" class="text-decoration-none mx-1">Book</a>
+                    <a href="/admin/borrow" class="text-decoration-none mx-1">Borrow Book</a>
+                    <a href="/admin/category" class="text-decoration-none mx-1">Category Book</a>
                 @else
-                    <a href="/" class="text-decoration-none mx-1 text-light">Home</a>
-                    <a href="/admin/book" class="text-decoration-none mx-1 text-light">Book</a>
+                    <a href="/" class="text-decoration-none mx-1">Home</a>
+                    <a href="/admin/book" class="text-decoration-none mx-1">Book</a>
                 @endif
         </div>
         <div class="auth">
