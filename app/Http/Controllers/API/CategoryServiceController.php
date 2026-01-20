@@ -18,6 +18,9 @@ class CategoryServiceController extends Controller
         $this->category = $category;
     }
 
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         return response([
@@ -32,20 +35,27 @@ class CategoryServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_name' => 'required|unique:categories,category_name'
+            'category_name' => 'required|string|min:3|unique:categories,category_name' 
         ],[
             'category_name.required' => "Category is required boss!!",
+            'category_name.min' => "Category must be at least 3 characters my bos!!",
             'category_name.unique' => "Category has already on database my bos!!",
         ]);
 
-        Category::create([
+        $category = Category::create([
             'category_name' => $request->category_name
         ]);
 
-        return redirect("/admin/category")->with("success", "category has been added!");
+        return response()->json([
+            'message' => 'Category created successfully',
+            'data' => $category
+        ], 201);
     }
 
-     public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
         $data = Category::find($id, ['*']);
 
@@ -76,8 +86,11 @@ class CategoryServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        $data = Category::find($id, ['*']);
-        $data->delete();
-        return redirect("/admin/category")->with("success", "category has been deleted!");
+        $category = $this->category->findOrFail($id);
+        $category->delete($id);
+
+        return response([
+            'message' => 'This category has been deleted.'
+        ], 201);
     }
 }
